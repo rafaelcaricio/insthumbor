@@ -20,32 +20,62 @@
         destinationType=navigator.camera.DestinationType;
     }
 
+    function changeStatus(status) {
+        var statusSpan = document.getElementById('status');
+        statusSpan.innerHTML = status;
+    }
+
     // Called when a photo is successfully retrieved
     //
-    function onPhotoDataSuccess(imageData) {
-      // Uncomment to view the base64 encoded image data
-      // console.log(imageData);
+    function onPhotoSuccess(imageURI) {
+      showPhoto(imageURI);
+      uploadPhoto(imageURI);
+    }
 
-      // Get image handle
-      //
+    function showPhoto(imageURI) {
       var image = document.getElementById('Image');
-
-      // Unhide image elements
-      //
       image.style.display = 'block';
+      image.src = imageURI;
+    }
 
-      // Show the captured photo
-      // The inline CSS rules are used to resize the image
-      //
-      image.src = "data:image/jpeg;base64," + imageData;
+    function uploadSuccess(r) {
+        console.log("Code = " + r.responseCode);
+        console.log("Response = " + r.response);
+        console.log("Sent = " + r.bytesSent);
+
+        changeStatus("Response code: " +  r.responseCode);
+    }
+
+    function uploadError(error) {
+        alert("An error has occurred: Code = " = error.code);
+
+    }
+
+    function uploadPhoto(imageURI) {
+        var options = new FileUploadOptions();
+        options.fileKey="media";
+        options.fileName="android.jpeg";
+        options.mimeType="image/jpeg";
+
+        var params = new Object();
+        options.params = params;
+
+        var ft = new FileTransfer();
+
+        var statusSpan = document.getElementById('status');
+        changeStatus("Preparing to upload...");
+
+        ft.upload(fileURI, "http://thumbor.caricio.com/upload", uploadSuccess, uploadError, options);
+
+        changeStatus("Uploading...");
     }
 
     // A button will call this function
     //
     function capturePhoto() {
       // Take picture using device camera and retrieve image as base64-encoded string
-      navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
-        destinationType: destinationType.DATA_URL });
+      navigator.camera.getPicture(onPhotoSuccess, onFail, { quality: 2,
+      destinationType: destinationType.FILE_URI });
     }
 
     // Called if something bad happens.
@@ -57,8 +87,9 @@
     </script>
   </head>
   <body>
-  	<h1>Insthumbor</h1>
+    <h1>Insthumbor</h1>
     <button onclick="capturePhoto();">Capture Photo</button> <br>
+    <span id="status"></span>
     <img style="display:none;" id="Image" src="" />
   </body>
 </html>
