@@ -57,15 +57,12 @@
         options.fileName="android.jpeg";
         options.mimeType="image/jpeg";
 
-        var params = new Object();
-        options.params = params;
-
         var ft = new FileTransfer();
 
         var statusSpan = document.getElementById('status');
         changeStatus("Preparing to upload...");
 
-        ft.upload(fileURI, "http://thumbor.caricio.com/upload", uploadSuccess, uploadError, options);
+        ft.upload(imageURI, "http://thumbor.caricio.com/upload", uploadSuccess, uploadError, options);
 
         changeStatus("Uploading...");
     }
