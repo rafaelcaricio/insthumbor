@@ -94,7 +94,7 @@ $(function() {
             this.showPicture(imageURI);
         },
 
-        _photoError: function() {
+        _photoError: function(message) {
             this.changeStatus('Photo capture failed.');
             alert('Failed because: ' + message);
         },
@@ -106,7 +106,7 @@ $(function() {
 
             this.changeStatus("Image remote URL: " + imageRemoteURL);
             var url = new ThumborURL(THUMBOR_REMOTE_URL, imageRemoteURL);
-            this.showPicture(url.resize(300, 300).filter("lomoize(0.6,2.3)").unsafeURL());
+            this.showPicture(url.resize(130, 130).filter("lomoize(0.6,2.3)").unsafeURL());
         },
 
         uploadError: function(error) {
