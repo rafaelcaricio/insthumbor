@@ -3,12 +3,16 @@
   <head>
     <title>Capture Photo</title>
     <script type="text/javascript" charset="utf-8" src="cordova-2.0.0.js"></script>
+    <script type="text/javascript" charset="utf-8" src="jquery.js"></script>
     <script type="text/javascript" charset="utf-8" src="insthumbor.js"></script>
+    <script type="text/javascript" charset="utf-8" src="libthumbor.js"></script>
   </head>
   <body>
-    <h1>Insthumbor</h1>
-    <button onclick="capturePhoto();">Capture Photo</button> <br>
-    <span id="status"></span>
-    <img style="display:none;" id="Image" src="" />
+    <div id="insthumbor">
+        <h1>Insthumbor</h1>
+        <span class="status-bar"></span>
+        <button class="picture-button">Capture Photo</button> <br>
+        <img style="display:none;" class="current-picture" src="" />
+    </div>
   </body>
 </html>

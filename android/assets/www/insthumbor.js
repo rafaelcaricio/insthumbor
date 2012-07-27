@@ -1,64 +1,133 @@
-var pictureSource;
-var destinationType; 
+$(function() {
+    
+    var THUMBOR_REMOTE_URL = 'http://thumbor.caricio.com',
+        THUMBOR_UPLOAD_URL = 'http://thumbor.caricio.com/upload';
 
-document.addEventListener("deviceready", onDeviceReady, false);
+    var Utils = {
 
-function onDeviceReady() {
-    pictureSource=navigator.camera.PictureSourceType;
-    destinationType=navigator.camera.DestinationType;
-}
+        makeId: function() {
+            var text = "";
+            var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-function changeStatus(status) {
-    var statusSpan = document.getElementById('status');
-    statusSpan.innerHTML = status;
-}
+            for( var i=0; i < 15; i++ ) {
+                text += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
 
-function onPhotoSuccess(imageURI) {
-    showPhoto(imageURI);
-    uploadPhoto(imageURI);
-}
+            return text;
+        },
 
-function onPhotoFail(message) {
-    changeStatus('Photo capture failed.');
-    alert('Failed because: ' + message);
-}
+        pad: function(number) {
+            number += '';
+            if (number.length == 1) { 
+                return '0' + number;
+            }
+            return number;
+        }
 
-function showPhoto(imageURI) {
-    var image = document.getElementById('Image');
-    image.style.display = 'block';
-    image.src = imageURI;
-}
+    };
 
-function onUploadSuccess(r) {
-    console.log("Code = " + r.responseCode);
-    console.log("Response = " + r.response);
-    console.log("Sent = " + r.bytesSent);
+    var Device = {
 
-    changeStatus("Response code: " +  r.response);
-}
+        destinationType: null,
 
-function onUploadError(error) {
-    changeStatus('Photo upload failed.');
-    alert("An error has occurred: Code = " + error.code);
-}
+        takePicture: function(handlers) {
+            navigator.camera.getPicture(handlers.success, handlers.error, {
+                quality: 20,
+                destinationType: Device.destinationType.FILE_URI
+            });
+        },
 
-function uploadPhoto(imageURI) {
-    var options = new FileUploadOptions();
-    options.fileKey="media";
-    options.fileName="insthumbor.jpeg";
-    options.mimeType="image/jpeg";
+        uploadPicture: function(imageURI, handlers) {
+           var options = new FileUploadOptions(),
+                today = new Date();
 
-    var ft = new FileTransfer();
+            options.fileKey = "media";
+            options.fileName = Utils.makeId() + ".jpeg";
+            options.mimeType = "image/jpeg";
 
-    var statusSpan = document.getElementById('status');
-    changeStatus("Preparing to upload...");
+            var ft = new FileTransfer();
+            ft.upload(imageURI, THUMBOR_UPLOAD_URL, function(response) {
+                handlers.success(
+                    '/'.join([THUMBOR_REMOTE_URL,
+                             'unsafe',
+                             today.getFullYear(),
+                             Utils.pad(today.getMoth() + 1), 
+                             today.getDate(),
+                             options.fileName]),
+                    response);
+            }, handlers.error, options);
+        }
+    };
 
-    ft.upload(imageURI, "http://thumbor.caricio.com/upload", onUploadSuccess, onUploadError, options);
 
-    changeStatus("Uploading...");
-}
+    window.Insthumbor = function(elementId) {
+        this.element = $(elementId);
+        this.elements = {};
 
-function capturePhoto() {
-    navigator.camera.getPicture(onPhotoSuccess, onPhotoFail, { quality: 50,
-    destinationType: destinationType.FILE_URI });
-}
+        this._findElements();
+        this._bindEvents();
+    };
+
+    $.extend(Insthumbor.prototype, {
+
+        _findElements: function() {
+            this.elements.currentPicture = this.element.find('.current-picture');
+            this.elements.pictureButton = this.element.find('.picture-button');
+            this.elements.statusBar = this.element.find('.status-bar');
+        },
+
+        _bindEvents: function() {
+            this.elements.pictureButton.on("click", $.proxy(this._onClickToTakePicture, this));
+        },
+
+        _onClickToTakePicture: function(ev) {
+            Device.takePicture({
+                success: $.proxy(this._photoSuccess, this),
+                error: $.proxy(this._photoError, this)
+            });
+        },
+
+        _photoSuccess: function(imageURI) {
+            Device.uploadPicture(imageURI, {
+                success: $.proxy(this._uploadSucess, this),
+                error: $.proxy(this._uploadError, this)
+            });
+            this.showPicture(imageURI);
+        },
+
+        _photoError: function() {
+            this.changeStatus('Photo capture failed.');
+            alert('Failed because: ' + message);
+        },
+
+        _uploadSucess: function(imageRemoteURL, response) {
+            console.log("Code = " + r.responseCode);
+            console.log("Response = " + r.response);
+            console.log("Sent = " + r.bytesSent);
+
+            this.changeStatus("Response code: " + imageRemoteURL);
+        },
+
+        uploadError: function(error) {
+            this.changeStatus('Photo upload failed.');
+            alert("An error has occurred: Code = " + error.code);
+        },
+
+        showPicture: function(imageURI) {
+            this.elements.currentPicture.attr('src', imageURI);
+            this.elements.currentPicture.show();
+        },
+
+        changeStatus: function(message) {
+            this.elements.statusBar.text(message);
+        }
+
+    });
+
+    function onDeviceReady() {
+        Device.destinationType = navigator.camera.DestinationType;
+        (new Insthumbor('#insthumbor'));
+    }
+
+    document.addEventListener("deviceready", onDeviceReady, false);
+});
