@@ -12,10 +12,32 @@
   <body>
     <div id="insthumbor">
         <menu>
+            <button class="back-button">voltar</button>
             <h1>Insthumbor</h1>
         </menu>
 
-        <img style="display:none;" class="current-picture" src="" />
+        <div class="screens">
+            <div class="wait-screen">
+                <div class="box">
+                    <img src="img/spinner.gif">
+                    <h2>Estamos carregando sua foto. Aguarde...</h2>
+                </div>
+            </div>
+
+            <div class="body">
+            <img class="current-picture" src="http://thumbor.caricio.com/unsafe/300x300/www.aaa.uni-augsburg.de/incoming/internationale_alumni/fotos_und_downloads_aai/Mariana_Ivanova.jpeg" />
+            </div>
+        </div>
+
+        <div class="box-selection">
+            <ul>
+                <li><a href="javascript:"><img src="http://thumbor.caricio.com/unsafe/60x60/www.aaa.uni-augsburg.de/incoming/internationale_alumni/fotos_und_downloads_aai/Mariana_Ivanova.jpeg"></a></li>
+                <li><a href="javascript:"><img src="http://thumbor.caricio.com/unsafe/60x60/filters:lomoize(0.6,2.3)/www.aaa.uni-augsburg.de/incoming/internationale_alumni/fotos_und_downloads_aai/Mariana_Ivanova.jpeg"></a></li>
+                <li><a href="javascript:"><img src="http://thumbor.caricio.com/unsafe/60x60/filters:noise(60):rgb(25,43,50)/www.aaa.uni-augsburg.de/incoming/internationale_alumni/fotos_und_downloads_aai/Mariana_Ivanova.jpeg"></a></li>
+                <li><a href="javascript:"><img src="http://thumbor.caricio.com/unsafe/60x60/filters:contrast(40)/www.aaa.uni-augsburg.de/incoming/internationale_alumni/fotos_und_downloads_aai/Mariana_Ivanova.jpeg"></a></li>
+                <li><a href="javascript:"><img src="http://thumbor.caricio.com/unsafe/60x60/filters:sharpen(2,1.0,true)/www.aaa.uni-augsburg.de/incoming/internationale_alumni/fotos_und_downloads_aai/Mariana_Ivanova.jpeg"></a></li>
+            </ul>
+        </div>
 
         <span class="status-bar"></span>
         <menu>

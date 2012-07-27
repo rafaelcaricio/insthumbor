@@ -1,8 +1,6 @@
 body {
     background: #FFF url("../img/bg.png") repeat;
 }
-
-
 h1 {
     color: rgba(255, 255, 255, 0.8);
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
@@ -26,8 +24,65 @@ menu {
     width: 45px;
     text-indent: -999999px;
     box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5);
-
 }
-.current-picture {
+.back-button {
+    position: absolute;
+    left: 10px;
+    border: 0 solid #000;
+    background: url("../img/sprit_insthumbor.png") no-repeat scroll 3px -37px transparent;
+    height: 43px;
+    width: 100px;
+    font-family: arial;
+    font-weight: bold;
+    color: white;
+}
+.screens {
+    text-align: center;
+}
+.wait-screen {
+    display: inline-block;
+    width: 300px;
+    height: 300px;
+}
+.wait-screen .box {
+    margin-top: 40px;
+    margin-left: 85px;
+    text-align: center;
+    background-color: black;
+    color: white;
+    width: 100px;
+    height: 100px;
+    padding: 15px;
+}
+.wait-screen .box h2 {
+    font-family: arial;
+    font-size: 12px;
+}
+.body {
+    height: 300px;
+    text-align: center;
+}
+.body img {
+    display: inline;
+}
+.box-selection {
     width: 100%;
+    text-align: center;
+    display: block;
+    height: 60px;
 }
+.box-selection ul {
+    background-color: black;
+    display: inline-block;
+    padding: 5px;
+    -webkit-padding-start: 0;
+    list-style: none;
+    margin: 0;
+    border: 0;
+    vertical-align: baseline;
+}
+.box-selection li {
+    display: inline;
+    margin-left: 5px;
+}
+
