@@ -1,0 +1,30 @@
+body {
+    background: #FFF url("../img/bg.png") repeat;
+}
+
+
+h1 {
+    color: rgba(255, 255, 255, 0.8);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+    font-family: cursive;
+}
+menu {
+    background: #FFF url("../img/bg-nav.png") repeat;
+    display: block;
+    height: 42px;
+    left: 50%;
+    border-radius: 5px;
+    text-align: center;
+    padding: 0;
+}
+.picture-button {
+    border: 0 solid #000;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    background: url("../img/sprit_insthumbor.png") no-repeat scroll 3px -203px transparent;
+    height: 42px;
+    width: 45px;
+    text-indent: -999999px;
+    box-shadow: inset 0px 1px 1px rgba(255, 255, 255, 0.5);
+
+}
