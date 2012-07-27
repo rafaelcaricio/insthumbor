@@ -47,13 +47,12 @@ $(function() {
 
             var ft = new FileTransfer();
             ft.upload(imageURI, THUMBOR_UPLOAD_URL, function(response) {
-                handlers.success(
-                    '/'.join([THUMBOR_REMOTE_URL,
-                             'unsafe',
-                             today.getFullYear(),
-                             Utils.pad(today.getMoth() + 1), 
-                             today.getDate(),
-                             options.fileName]),
+                handlers.success([THUMBOR_REMOTE_URL,
+                                  'unsafe',
+                                   today.getFullYear(),
+                                   Utils.pad(today.getMonth() + 1),
+                                   today.getDate(),
+                                   options.fileName].join('/'),
                     response);
             }, handlers.error, options);
         }
@@ -101,11 +100,13 @@ $(function() {
         },
 
         _uploadSucess: function(imageRemoteURL, response) {
-            console.log("Code = " + r.responseCode);
-            console.log("Response = " + r.response);
-            console.log("Sent = " + r.bytesSent);
+            console.log("Code = " + response.responseCode);
+            console.log("Response = " + response.response);
+            console.log("Sent = " + response.bytesSent);
 
-            this.changeStatus("Response code: " + imageRemoteURL);
+            this.changeStatus("Image remote URL: " + imageRemoteURL);
+            var url = new ThumborURL(THUMBOR_REMOTE_URL, imageRemoteURL);
+            this.showPicture(url.resize(300, 300).filter("lomoize(0.6,2.3)").unsafeURL());
         },
 
         uploadError: function(error) {
@@ -125,6 +126,7 @@ $(function() {
     });
 
     function onDeviceReady() {
+        console.log("device ready!");
         Device.destinationType = navigator.camera.DestinationType;
         (new Insthumbor('#insthumbor'));
     }
