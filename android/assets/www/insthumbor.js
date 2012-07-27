@@ -1,7 +1,7 @@
 var pictureSource;
 var destinationType; 
 
-document.addEventListener("deviceready",onDeviceReady,false);
+document.addEventListener("deviceready", onDeviceReady, false);
 
 function onDeviceReady() {
     pictureSource=navigator.camera.PictureSourceType;
@@ -19,6 +19,7 @@ function onPhotoSuccess(imageURI) {
 }
 
 function onPhotoFail(message) {
+    changeStatus('Photo capture failed.');
     alert('Failed because: ' + message);
 }
 
@@ -28,7 +29,7 @@ function showPhoto(imageURI) {
     image.src = imageURI;
 }
 
-function uploadSuccess(r) {
+function onUploadSuccess(r) {
     console.log("Code = " + r.responseCode);
     console.log("Response = " + r.response);
     console.log("Sent = " + r.bytesSent);
@@ -36,14 +37,15 @@ function uploadSuccess(r) {
     changeStatus("Response code: " +  r.response);
 }
 
-function uploadError(error) {
-    alert("An error has occurred: Code = " = error.code);
+function onUploadError(error) {
+    changeStatus('Photo upload failed.');
+    alert("An error has occurred: Code = " + error.code);
 }
 
 function uploadPhoto(imageURI) {
     var options = new FileUploadOptions();
     options.fileKey="media";
-    options.fileName="android_doidao.jpeg";
+    options.fileName="insthumbor.jpeg";
     options.mimeType="image/jpeg";
 
     var ft = new FileTransfer();
@@ -51,7 +53,7 @@ function uploadPhoto(imageURI) {
     var statusSpan = document.getElementById('status');
     changeStatus("Preparing to upload...");
 
-    ft.upload(imageURI, "http://thumbor.caricio.com/upload", uploadSuccess, uploadError, options);
+    ft.upload(imageURI, "http://thumbor.caricio.com/upload", onUploadSuccess, onUploadError, options);
 
     changeStatus("Uploading...");
 }
