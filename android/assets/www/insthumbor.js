@@ -44,6 +44,7 @@ $(function() {
             options.fileKey = "media";
             options.fileName = Utils.makeId() + ".jpeg";
             options.mimeType = "image/jpeg";
+            options.chunkedMode = false;
 
             var ft = new FileTransfer();
             ft.upload(imageURI, THUMBOR_UPLOAD_URL, function(response) {
@@ -73,6 +74,11 @@ $(function() {
             this.elements.currentPicture = this.element.find('.current-picture');
             this.elements.pictureButton = this.element.find('.picture-button');
             this.elements.statusBar = this.element.find('.status-bar');
+            this.elements.backButton = this.element.find('.back-button');
+            this.elements.waitScreen = this.element.find('.wait-screen');
+            this.elements.imageScreen = this.element.find('.body');
+            this.elements.boxSelection = this.element.find('.box-selection');
+            this.elements.footerMenu = this.element.find('.footer-menu');
         },
 
         _bindEvents: function() {
@@ -106,7 +112,7 @@ $(function() {
 
             this.changeStatus("Image remote URL: " + imageRemoteURL);
             var url = new ThumborURL(THUMBOR_REMOTE_URL, imageRemoteURL);
-            this.showPicture(url.resize(130, 130).filter("lomoize(0.6,2.3)").unsafeURL());
+            this.showPicture(url.resize(300, 300).filter("lomoize(0.6,2.3)").unsafeURL());
         },
 
         uploadError: function(error) {
