@@ -56,6 +56,16 @@ $(function() {
                                    options.fileName].join('/'),
                     response);
             }, handlers.error, options);
+        },
+
+        uploadUrl: function(imageURI, handlers) {
+            $.ajax({
+                type: 'POST',
+                url: 'http://caricio.com/insthumbor',
+                data: {'image_url': imageURI},
+                success: handlers.success,
+                error: handlers.error
+            });
         }
     };
 
@@ -79,11 +89,13 @@ $(function() {
             this.elements.imageScreen = this.element.find('.body');
             this.elements.boxSelection = this.element.find('.box-selection');
             this.elements.footerMenu = this.element.find('.footer-menu');
+            this.elements.sendButton = this.element.find('.send-button');
         },
 
         _bindEvents: function() {
             this.elements.pictureButton.on("click", $.proxy(this._onClickToTakePicture, this));
             this.elements.backButton.on("click", $.proxy(this._onClickToBack, this));
+            this.elements.sendButton.on("click", $.proxy(this._onClickToSendPicture, this));
         },
 
         _onClickToBack: function(ev) {
@@ -100,6 +112,26 @@ $(function() {
                 success: $.proxy(this._photoSuccess, this),
                 error: $.proxy(this._photoError, this)
             });
+        },
+
+        _onClickToSendPicture: function() {
+            Device.uploadUrl(this.elements.currentPicture.attr('src'), {
+                success: $.proxy(function(response) {
+                    console.log('sucesso no upload da url escolhida');
+                    this.elements.waitScreen.hide();
+                    this.elements.footerMenu.show();
+                }, this),
+                error: $.proxy(function(error) {
+                    console.log('erro no upload da url escolhida');
+                    this.elements.waitScreen.hide();
+                    this.elements.footerMenu.show();
+                }, this)
+            });
+            this.elements.backButton.hide();
+            this.elements.imageScreen.hide();
+            this.elements.boxSelection.hide();
+            this.elements.footerMenu.hide();
+            this.elements.waitScreen.show();
         },
 
         _photoSuccess: function(imageURI) {
