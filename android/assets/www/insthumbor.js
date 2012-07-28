@@ -83,6 +83,16 @@ $(function() {
 
         _bindEvents: function() {
             this.elements.pictureButton.on("click", $.proxy(this._onClickToTakePicture, this));
+            this.elements.backButton.on("click", $.proxy(this._onClickToBack, this));
+        },
+
+        _onClickToBack: function(ev) {
+            ev.preventDefault();
+            this.elements.backButton.hide();
+            this.elements.waitScreen.hide();
+            this.elements.imageScreen.hide();
+            this.elements.boxSelection.hide();
+            this.elements.footerMenu.show();
         },
 
         _onClickToTakePicture: function(ev) {
@@ -97,7 +107,8 @@ $(function() {
                 success: $.proxy(this._uploadSucess, this),
                 error: $.proxy(this._uploadError, this)
             });
-            this.showPicture(imageURI);
+            this.elements.waitScreen.show();
+            this.elements.footerMenu.hide();
         },
 
         _photoError: function(message) {
@@ -112,7 +123,36 @@ $(function() {
 
             this.changeStatus("Image remote URL: " + imageRemoteURL);
             var url = new ThumborURL(THUMBOR_REMOTE_URL, imageRemoteURL);
-            this.showPicture(url.resize(300, 300).filter("lomoize(0.6,2.3)").unsafeURL());
+            this.showPicture(url.resize(300, 300).unsafeURL());
+            this.elements.waitScreen.hide();
+            this.elements.backButton.show();
+            this.elements.imageScreen.show();
+            this._showBoxSelection(imageRemoteURL);
+        },
+
+        _showBoxSelection: function(imageRemoteURL) {
+            var filters = [
+                'quality(50)',
+                'noise(60):rgb(25,43,50)',
+                'lomoize(0.6,2.3)',
+                'contrast(40)',
+                'sharpen(2,1.0,true)'
+            ],
+            self = this;
+
+            this.elements.boxSelection.find('li').each(function(i) {
+
+                var url = new ThumborURL(THUMBOR_REMOTE_URL, imageRemoteURL).resize(50, 50);
+                $(this).find('img').attr('src', url.filter(filters[i]).unsafeURL());
+
+                $(this).find('a').unbind('click').bind('click', function() {
+                    var selectionURL = new ThumborURL(THUMBOR_REMOTE_URL, imageRemoteURL).resize(300, 300);
+                    self.showPicture(selectionURL.filter(filters[i]).unsafeURL());
+                });
+
+            });
+
+            this.elements.boxSelection.show();
         },
 
         uploadError: function(error) {
